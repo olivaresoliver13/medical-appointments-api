@@ -1,0 +1,46 @@
+{
+  "name": "medical-appointment-api",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "API RESTful para gestión de citas médicas",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "migrate:latest": "knex migrate:latest --knexfile src/config/knexfile.js",
+    "migrate:rollback": "knex migrate:rollback --knexfile src/config/knexfile.js",
+    "seed:run": "knex seed:run --knexfile src/config/knexfile.js",
+    "test": "jest --watch"
+  },
+  "keywords": [
+    "nodejs",
+    "fastify",
+    "mysql",
+    "jwt",
+    "docker",
+    "knex",
+    "restful",
+    "api"
+  ],
+  "author": "Oliver Olivares",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/jwt": "^7.2.4",
+    "@fastify/swagger": "^8.12.1",
+    "@fastify/swagger-ui": "^2.1.0",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.29.1",
+    "knex": "^3.1.0",
+    "mysql2": "^3.9.7",
+    "stripe": "^14.18.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/preset-env": "^7.27.1",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0",
+    "supertest": "^6.3.4"
+  }
+}
