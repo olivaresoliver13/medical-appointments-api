@@ -1,4 +1,5 @@
 import PaymentService from "../services/payment.service.js";
+import crypto from "crypto";
 import { validateAppointmentId } from "../utils/validation.js";
 
 const paymentService = new PaymentService();
@@ -18,34 +19,60 @@ export const createCheckoutSession = async (request, reply) => {
 
 export const handleWebhook = async (request, reply) => {
   try {
-    const sig = request.headers["stripe-signature"];
+    let sig = request.headers["stripe-signature"];
 
     if (!sig) {
-      throw new Error("No stripe-signature header provided");
+      throw new Error("No se proporciona encabezado stripe-signature.");
     }
 
-    // Make sure you're getting the raw body, not parsed JSON
+    // Si el signature es solo el secreto (whsec_...), construimos el encabezado manualmente
+    if (sig.startsWith("whsec_")) {
+      if (process.env.NODE_ENV !== "development") {
+        throw new Error(
+          "Formato de firma inválido - solo permitido en desarrollo"
+        );
+      }
+
+      const timestamp = Math.floor(Date.now() / 1000);
+      const payloadString = request.rawBody.toString("utf8");
+      const signedPayload = `${timestamp}.${payloadString}`;
+
+      const signature = crypto
+        .createHmac("sha256", sig)
+        .update(signedPayload)
+        .digest("hex");
+
+      sig = `t=${timestamp},v1=${signature}`;
+    }
+
     const payload = request.rawBody;
     try {
       const event = await paymentService.handlePaymentWebhook(payload, sig);
 
-      // Manejar diferentes tipos de eventos
       switch (event.type) {
         case "checkout.session.completed":
           const session = event.data.object;
-          // Procesar pago completado
+          // Aquí tu lógica para manejar el pago completado
+          console.log(`Pago completado para sesión: ${session.id}`);
           break;
         default:
-          console.log(`Evento desconocido: ${event.type}`);
+          console.log(`Evento no manejado: ${event.type}`);
       }
 
       reply.send({ received: true });
     } catch (error) {
-      console.error("Error de procesamiento de webhook:", error);
-      reply.status(400).send({ error: error.message });
+      console.error("Error en procesamiento de webhook:", {
+        error: error.message,
+        stack: error.stack,
+      });
+      reply.status(400).send({ error: "Error procesando webhook" });
     }
   } catch (error) {
-    console.error("Error de webhook:", error.message);
+    console.error("Error general en webhook:", {
+      error: error.message,
+      headers: request.headers,
+      rawBodySample: request.rawBody?.toString().substring(0, 100),
+    });
     reply.status(400).send({ error: error.message });
   }
 };

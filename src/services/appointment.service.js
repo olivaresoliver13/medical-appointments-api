@@ -1,9 +1,32 @@
 import Appointment from "../models/appointment.model.js";
-import { isValidWorkingHour } from "../utils/validation.js";
+import Doctor from "../models/doctor.model.js";
+import {
+  isValidWorkingHour,
+  validateDoctortId,
+  validateAppointmentTime,
+} from "../utils/validation.js";
+import { isBefore, startOfDay } from "date-fns";
 import ApiError from "../utils/api-error.js";
 
 class AppointmentService {
   async requestAppointment(patientId, doctorId, appointmentTime) {
+    validateDoctortId(doctorId);
+    validateAppointmentTime(appointmentTime);
+
+    const existingDoctor = await Doctor.findById(doctorId);
+
+    if (!existingDoctor) {
+      throw new ApiError(404, "Doctor no existe.");
+    }
+
+    // Validación de fecha: no permitir días anteriores al día actual
+    const appointmentDate = new Date(appointmentTime);
+    const today = startOfDay(new Date());
+
+    if (isBefore(appointmentDate, today)) {
+      throw new ApiError(400, "No se puede pedir cita en una fecha pasada.");
+    }
+
     const timePart = appointmentTime.split(" ")[1];
     if (!timePart || !isValidWorkingHour(timePart)) {
       throw new ApiError(

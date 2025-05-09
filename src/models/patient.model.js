@@ -18,7 +18,10 @@ class Patient {
 
   static async findByEmail(email) {
     console.log("Looking for patient with email:", email);
-console.log("Generated SQL:", db("patients").where({ email }).first().toString());
+    console.log(
+      "Generated SQL:",
+      db("patients").where({ email }).first().toString()
+    );
     return db("patients").where({ email }).first();
   }
 }

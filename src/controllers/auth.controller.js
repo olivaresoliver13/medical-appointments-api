@@ -1,5 +1,8 @@
 import AuthService from "../services/auth.service.js";
-import { validateRegisterBody, validateLoginCredentials } from "../utils/validation.js";
+import {
+  validateRegisterBody,
+  validateLoginCredentials,
+} from "../utils/validation.js";
 
 export const registerPatient = async (request, reply) => {
   const authService = new AuthService(request.server);
@@ -28,7 +31,7 @@ export const registerDoctor = async (request, reply) => {
 export const login = async (request, reply) => {
   const authService = new AuthService(request.server);
   try {
-    validateLoginCredentials(request.body)
+    validateLoginCredentials(request.body);
     const { email, password, userType } = request.body;
     const { token, user } = await authService.login(email, password, userType);
     reply.send({ token, user });

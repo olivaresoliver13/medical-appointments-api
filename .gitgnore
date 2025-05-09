@@ -1,35 +1,33 @@
 
-  # Configs locales
-  .vscode
-  .idea
-  .DS_Store
-  Thumbs.db
-  my.cn
+# Configs locales
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+my.cn
 
-  # Node modules (serán instalados en la imagen)
-  node_modules/
-  package-lock.json/
+# Node modules (serán instalados en la imagen)
+node_modules/
+package-lock.json
 
-  # Logs
-  logs
-  *.log
+# Logs
+logs
+*.log
 
-  # Entornos y secretos
-  .env
+# Entornos y secretos
+.env
 
+# Tests
+*.test.js
+*.spec.js
+jest-cache/
+jest-output.json
+test-results.xml
 
-  # Tests
-  __tests__/
-  *.test.js
-  *.spec.js
-  jest-cache/
-  jest-output.json
-  test-results.xml
-
-
-  # Caches y archivos temporales
-  .npm
-  .eslintcache
-  *.tgz
-  *.swp
-  *.swo
+# Caches y archivos temporales
+.npm
+npm-debug.*
+.eslintcache
+*.tgz
+*.swp
+*.swo

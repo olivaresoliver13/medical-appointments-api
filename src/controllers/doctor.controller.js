@@ -1,5 +1,8 @@
 import AppointmentService from "../services/appointment.service.js";
-import { validateAppointmentId, validateDoctortId } from "../utils/validation.js";
+import {
+  validateAppointmentId,
+  validateDoctortId,
+} from "../utils/validation.js";
 
 const appointmentService = new AppointmentService();
 

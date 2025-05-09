@@ -1,8 +1,7 @@
 import AppointmentService from "../services/appointment.service.js";
 import { validatePatientId } from "../utils/validation.js";
 
-
-validatePatientId
+validatePatientId;
 
 const appointmentService = new AppointmentService();
 
@@ -10,6 +9,7 @@ export const requestAppointment = async (request, reply) => {
   try {
     const { doctorId, appointmentTime } = request.body;
     const patientId = request.user.id;
+
     const appointment = await appointmentService.requestAppointment(
       patientId,
       doctorId,

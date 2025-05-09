@@ -11,20 +11,19 @@ import { jwtSecret } from "./config/jwt.js";
 
 dotenv.config();
 
-const fastify = Fastify({ logger: true });
+const fastify = Fastify({ bodyLimit: 1048576 * 10, logger: true });
 const API_VERSION = process.env.API_VERSION || "v1";
 const API_BASE_PATH = `/api/${API_VERSION}`;
-
 
 fastify.addContentTypeParser(
   "application/json",
   { parseAs: "string" },
-  function (req, body, done) {
-    req.rawBody = body;  // Guardamos el cuerpo crudo en `req.rawBody`
+  (req, body, done) => {
+    req.rawBody = body;
     try {
-      const json = JSON.parse(body); // Puedes parsear aquí si necesitas trabajar con un objeto JSON también
-      done(null, json);
+      done(null, JSON.parse(body));
     } catch (err) {
+      err.statusCode = 400;
       done(err, undefined);
     }
   }

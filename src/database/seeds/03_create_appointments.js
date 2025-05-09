@@ -14,6 +14,6 @@ export async function seed(knex) {
       patient_id: 2,
       payment_status: "nopagada",
       status: "pendiente",
-    }
+    },
   ]);
 }

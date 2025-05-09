@@ -46,7 +46,7 @@ export const validateLoginCredentials = (body) => {
   }
 }
 export const validatePatientId = (patientId) => {
-  if (!doctorId) {
+  if (!patientId) {
     throw new ApiError(409, "El ID del paciente es obligatorio.");
   }
 }
@@ -59,5 +59,11 @@ export const validateDoctortId = (doctorId) => {
 export const validateAppointmentId = (appointmentId) => {
   if (!appointmentId) {
     throw new ApiError(409, "El ID de cita es obligatorio.");
+  }
+}
+
+export const validateAppointmentTime = (appointmentTime) => {
+  if (!appointmentTime) {
+    throw new ApiError(409, "Fecha de cita es obligatoria.");
   }
 }
