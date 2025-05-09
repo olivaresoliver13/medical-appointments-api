@@ -13,7 +13,6 @@ export const swaggerConfig = {
       Roles:
       - Pacientes: pueden solicitar citas y ver su historial
       - Médicos: pueden gestionar su agenda y confirmar citas
-      - Administradores: gestión completa del sistema
     `,
       version: "1.0.0",
     },
@@ -101,23 +100,6 @@ export const swaggerConfig = {
               type: "string",
               enum: ["nopagada", "pagada"],
               example: "nopagada",
-            },
-          },
-        },
-        ApiError: {
-          type: "object",
-          properties: {
-            statusCode: {
-              type: "integer",
-              example: 400,
-            },
-            error: {
-              type: "string",
-              example: "Bad Request",
-            },
-            message: {
-              type: "string",
-              example: "Parámetros de entrada inválidos",
             },
           },
         },
@@ -434,7 +416,7 @@ export const swaggerConfig = {
               "application/json": {
                 schema: {
                   type: "object",
-                  required: ["email", "password"],
+                  required: ["doctorId", "appointmentTime"],
                   properties: {
                     doctorId: {
                       type: "integer",
@@ -492,6 +474,36 @@ export const swaggerConfig = {
                 },
               },
             },
+            400: {
+              description: "Solictar cita con una fecha pasada",
+              content: {
+                "application/json": {
+                  example: {
+                    message: "No se puede pedir cita en una fecha pasada.",
+                  },
+                },
+              },
+            },
+            404: {
+              description: "ID del doctor es obligatorio",
+              content: {
+                "application/json": {
+                  example: {
+                    message: "ID del doctor es obligatorio.",
+                  },
+                },
+              },
+            },
+            404: {
+              description: "Fecha de cita obligatoria",
+              content: {
+                "application/json": {
+                  example: {
+                    message: "Fecha de cita es obligatoria.",
+                  },
+                },
+              },
+            },
             401: {
               description: "Token no válido",
               content: {
@@ -508,6 +520,26 @@ export const swaggerConfig = {
                 "application/json": {
                   example: {
                     message: "No tienes permisos para acceder a este recurso.",
+                  },
+                },
+              },
+            },
+            404: {
+              description: "ID Doctor es existe",
+              content: {
+                "application/json": {
+                  example: {
+                    message: "Doctor no existe.",
+                  },
+                },
+              },
+            },
+            409: {
+              description: "Horario de cita ya ocupado",
+              content: {
+                "application/json": {
+                  example: {
+                    message: "El horario ya está ocupado.",
                   },
                 },
               },
@@ -1012,6 +1044,17 @@ export const swaggerConfig = {
                           "cs_test_a1AWgXLAIbRBaT9IyRsQWTcsL1EKE61lmCGdlXLH0upp88qJQcVcYLh7s4",
                       },
                     },
+                  },
+                },
+              },
+            },
+            400: {
+              description: "Sin stripe-signature en el header",
+              content: {
+                "application/json": {
+                  example: {
+                    message:
+                      "No se proporciona encabezado el valor de stripe-signature.",
                   },
                 },
               },
